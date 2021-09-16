@@ -2,7 +2,10 @@
 
 namespace AvadaIo;
 
+use AvadaIo\Exception\SdkException;
 use AvadaIo\Http\HttpRequestJson;
+use AvadaIo\Resources\Connection;
+use Exception;
 
 
 /**
@@ -11,6 +14,9 @@ use AvadaIo\Http\HttpRequestJson;
  */
 class AvadaIoSdk
 {
+
+    const DEFAULT_API_URL = 'app.avada.io';
+
     /**
      * @var string
      */
@@ -20,6 +26,11 @@ class AvadaIoSdk
      * @var string
      */
     protected $appKey = null;
+
+    /**
+     * @var string
+     */
+    protected $apiUrl = null;
 
     /**
      * @var string[]
@@ -44,61 +55,24 @@ class AvadaIoSdk
     public function __construct($config = array())
     {
         if (!$config['appId'] || !$config['appKey']) {
-            throw new \Exception('Missing or invalid options');
+            throw new SdkException('Missing or invalid options');
         }
         $this->appId = $config['appId'];
         $this->appKey = $config['appKey'];
+        $this->apiUrl = $config['apiUrl'] ?? self::DEFAULT_API_URL;
 
         return $this;
-    }
-
-    /**
-     * Getter for app id
-     *
-     * @return mixed|string|null
-     */
-    public function getAppId()
-    {
-        return $this->appId;
-    }
-
-    /**
-     * Getter for app key
-     *
-     * @return mixed|string|null
-     */
-    public function getAppKey()
-    {
-        return $this->appKey;
-    }
-
-    public function getApiUrl($endpoint)
-    {
-        return 'https://app.avada.io/app/api/v1' . $endpoint;
-    }
-
-    /**
-     * @param $body
-     * @param false $noHash
-     * @return mixed|string|null
-     */
-    public function getHmac($body, $noHash = false)
-    {
-        if (!$noHash) {
-            return base64_encode(hash_hmac('sha256', json_encode($body, JSON_FORCE_OBJECT), $this->getAppKey(), true));
-        }
-
-        return $this->getAppKey();
     }
 
     /**
      * @param $endpoint
      * @param string $method
      * @param array $body
-     * @param false $isTest
-     * @param false $isTrigger
+     * @param bool $isTest
+     * @param bool $isTrigger
+     * @return mixed
      */
-    public function makeRequest($endpoint, $method = 'POST', $body = [], $isTest = false, $isTrigger = false)
+    public function makeRequest($endpoint, string $method = 'POST', array $body = [], bool $isTest = false, bool $isTrigger = false)
     {
         $curl_options = [
             CURLOPT_CUSTOMREQUEST => $method,
@@ -128,42 +102,84 @@ class AvadaIoSdk
     }
 
     /**
-     * Return ShopifyResource instance for a resource.
-     * @example $shopify->Product->get(); //Returns all available Products
+     * Helper getting the API URL
+     *
+     * @param $endpoint
+     * @return string
+     */
+    public function getApiUrl($endpoint): string
+    {
+        return "https://{$this->apiUrl}/app/api/v1{$endpoint}";
+    }
+
+    /**
+     * Getter for app id
+     *
+     * @return mixed|string|null
+     */
+    public function getAppId()
+    {
+        return $this->appId;
+    }
+
+    /**
+     * @param $body
+     * @param false $noHash
+     * @return mixed|string|null
+     */
+    public function getHmac($body, bool $noHash = false)
+    {
+        if (!$noHash) {
+            return base64_encode(hash_hmac('sha256', json_encode($body, JSON_FORCE_OBJECT), $this->getAppKey(), true));
+        }
+
+        return $this->getAppKey();
+    }
+
+    /**
+     * Getter for app key
+     *
+     * @return mixed|string|null
+     */
+    public function getAppKey()
+    {
+        return $this->appKey;
+    }
+
+    /**
+     * Return AvadaIoSdk instance for a resource.
+     * @example avadaio->Connection->test(); //Test the connection
      * Called like an object properties (without parenthesis)
      *
      * @param string $resourceName
      *
      * @return AvadaIoSdk
      */
-    public function __get($resourceName)
+    public function __get(string $resourceName)
     {
         return $this->$resourceName();
     }
 
     /**
-     * Return ShopifyResource instance for a resource.
+     * Return AvadaIoSdk instance for a resource.
      * Called like an object method (with parenthesis) optionally with the resource ID as the first argument
-     * @example avadaio->Connection->test(); //Return a specific product defined by $productID
+     * @example avadaio->Connection->test(); //Test the connection
      *
      * @param string $resourceName
      * @param array $arguments
      *
-     * @throws Exception if the $name is not a valid ShopifyResource resource.
+     * @throws SdkException if the $name is not a valid AvadaIoSdk resource.
      *
      * @return AvadaIoSdk
      */
-    public function __call($resourceName, $arguments)
+    public function __call(string $resourceName, array $arguments)
     {
         if (!in_array($resourceName, $this->resources)) {
             $message = "Invalid resource name $resourceName. Pls check the API Reference to get the appropriate resource name.";
-            throw new \Exception($message);
+            throw new SdkException($message);
         }
 
-        $resourceClassName = __NAMESPACE__ . "\\$resourceName";
-
-        //If first argument is provided, it will be considered as the ID of the resource.
-        $resourceID = !empty($arguments) ? $arguments[0] : null;
+        $resourceClassName = __NAMESPACE__ . "\\Resources" . "\\$resourceName";
 
         //Initiate the resource object
         return new $resourceClassName($this);

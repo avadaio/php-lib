@@ -1,15 +1,23 @@
 <?php
 
-namespace AvadaIo;
+namespace AvadaIo\Resources;
+
+use AvadaIo\AvadaIoSdk;
 
 class Connection
 {
     /**
+     * The AVADA SDK instance
+     *
      * @var AvadaIoSdk
      */
     protected $avadaio = null;
 
-    public function __construct($avadaio)
+    /**
+     *
+     * @param AvadaIoSdk $avadaio
+     */
+    public function __construct(AvadaIoSdk $avadaio)
     {
         $this->avadaio = $avadaio;
     }

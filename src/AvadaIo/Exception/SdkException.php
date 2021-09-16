@@ -5,7 +5,7 @@ namespace AvadaIo\Exception;
 
 use Exception;
 
-class CurlException extends Exception
+class SdkException extends Exception
 {
 
 }

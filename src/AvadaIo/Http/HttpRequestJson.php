@@ -28,6 +28,22 @@ class HttpRequestJson
      */
     private static $postDataJSON;
 
+    /**
+     * Implement a GET request and return json decoded output
+     *
+     * @param string $url
+     * @param array $httpHeaders
+     *
+     * @return array
+     */
+    public static function get($url, $httpHeaders = array())
+    {
+        self::prepareRequest($httpHeaders);
+
+        $response = CurlRequest::get($url, self::$httpHeaders);
+
+        return self::processResponse($response);
+    }
 
     /**
      * Prepare the data and request headers before making the call
@@ -51,20 +67,15 @@ class HttpRequestJson
     }
 
     /**
-     * Implement a GET request and return json decoded output
+     * Decode JSON response
      *
-     * @param string $url
-     * @param array $httpHeaders
+     * @param string $response
      *
      * @return array
      */
-    public static function get($url, $httpHeaders = array())
+    protected static function processResponse($response)
     {
-        self::prepareRequest($httpHeaders);
-
-        $response = CurlRequest::get($url, self::$httpHeaders);
-
-        return self::processResponse($response);
+        return json_decode($response, true);
     }
 
     /**
@@ -118,18 +129,6 @@ class HttpRequestJson
         $response = CurlRequest::delete($url, self::$httpHeaders);
 
         return self::processResponse($response);
-    }
-
-    /**
-     * Decode JSON response
-     *
-     * @param string $response
-     *
-     * @return array
-     */
-    protected static function processResponse($response)
-    {
-        return json_decode($response, true);
     }
 
 }

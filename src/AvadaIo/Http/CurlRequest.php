@@ -3,9 +3,6 @@
 namespace AvadaIo\Http;
 
 
-use AvadaIo\Exception\CurlException;
-use AvadaIo\Http\CurlResponse;
-
 /*
 |--------------------------------------------------------------------------
 | CurlRequest
@@ -14,6 +11,8 @@ use AvadaIo\Http\CurlResponse;
 | This class handles get, post, put, delete HTTP requests
 |
 */
+
+use Exception;
 
 class CurlRequest
 {
@@ -37,6 +36,22 @@ class CurlRequest
      * @var array
      */
     protected static $config = array();
+
+    /**
+     * Implement a GET request and return output
+     *
+     * @param string $url
+     * @param array $httpHeaders
+     *
+     * @return string
+     */
+    public static function get($url, $httpHeaders = array())
+    {
+        //Initialize the Curl resource
+        $ch = self::init($url, $httpHeaders);
+
+        return self::processRequest($ch);
+    }
 
     /**
      * Initialize the curl resource
@@ -75,19 +90,34 @@ class CurlRequest
     }
 
     /**
-     * Implement a GET request and return output
+     * Execute a request, release the resource and return output
      *
-     * @param string $url
-     * @param array $httpHeaders
+     * @param resource $ch
      *
      * @return string
+     * @throws Exception if curl request is failed with error
+     *
      */
-    public static function get($url, $httpHeaders = array())
+    protected static function processRequest($ch)
     {
-        //Initialize the Curl resource
-        $ch = self::init($url, $httpHeaders);
 
-        return self::processRequest($ch);
+        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+        $output = curl_exec($ch);
+        $info = curl_getinfo($ch);
+        $headerSent = curl_getinfo($ch, CURLINFO_HEADER_OUT);
+        $response = new CurlResponse($output);
+
+        self::$lastHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if (curl_errno($ch)) {
+            throw new Exception(curl_errno($ch) . ' : ' . curl_error($ch));
+        }
+
+        // close curl resource to free up system resources
+        curl_close($ch);
+
+        self::$lastHttpResponseHeaders = $response->getHeaders();
+
+        return $response->getBody();
     }
 
     /**
@@ -153,36 +183,5 @@ class CurlRequest
     public static function config($config = array())
     {
         self::$config = $config;
-    }
-
-    /**
-     * Execute a request, release the resource and return output
-     *
-     * @param resource $ch
-     *
-     * @return string
-     * @throws Exception if curl request is failed with error
-     *
-     */
-    protected static function processRequest($ch)
-    {
-
-        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-        $output = curl_exec($ch);
-        $info = curl_getinfo($ch);
-        $headerSent = curl_getinfo($ch, CURLINFO_HEADER_OUT);
-        $response = new CurlResponse($output);
-
-        self::$lastHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        if (curl_errno($ch)) {
-            throw new \Exception(curl_errno($ch) . ' : ' . curl_error($ch));
-        }
-
-        // close curl resource to free up system resources
-        curl_close($ch);
-
-        self::$lastHttpResponseHeaders = $response->getHeaders();
-
-        return $response->getBody();
     }
 }

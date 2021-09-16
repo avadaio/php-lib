@@ -2,6 +2,10 @@
 
 namespace AvadaIo\Http;
 
+use function array_slice;
+use function count;
+use function explode;
+
 class CurlResponse
 {
     /** @var array */
@@ -19,13 +23,13 @@ class CurlResponse
      */
     private function parse($response)
     {
-        $response = \explode("\r\n\r\n", $response);
-        if (\count($response) > 1) {
+        $response = explode("\r\n\r\n", $response);
+        if (count($response) > 1) {
             // We want the last two parts
-            $response = \array_slice($response, -2, 2);
+            $response = array_slice($response, -2, 2);
             list($headers, $body) = $response;
-            foreach (\explode("\r\n", $headers) as $header) {
-                $pair = \explode(': ', $header, 2);
+            foreach (explode("\r\n", $headers) as $header) {
+                $pair = explode(': ', $header, 2);
                 if (isset($pair[1])) {
                     $headerKey = strtolower($pair[0]);
                     $this->headers[$headerKey] = $pair[1];
@@ -57,19 +61,19 @@ class CurlResponse
         return isset($this->headers[$key]) ? $this->headers[$key] : null;
     }
 
-    /**
-     * @return string
-     */
-    public function getBody()
-    {
-        return $this->body;
-    }
-
     public function __toString()
     {
         $body = $this->getBody();
         $body = $body ?: '';
 
         return $body;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBody()
+    {
+        return $this->body;
     }
 }
