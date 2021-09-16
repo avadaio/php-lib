@@ -3,6 +3,8 @@
 namespace AvadaIo\Resources;
 
 use AvadaIo\AvadaIoSdk;
+use AvadaIo\Data\ApiResponse;
+use AvadaIo\Data\ContactInputData;
 
 class Contact
 {
@@ -25,10 +27,10 @@ class Contact
     /**
      * @description Create AVADA Email Marketing new contact
      *
-     * @param $data
-     * @return mixed
+     * @param ContactInputData|array $data
+     * @return ApiResponse
      */
-    public function create($data)
+    public function create(array $data): ApiResponse
     {
         return $this->avadaio->makeRequest("/customers", 'POST', ['data' => $data]);
     }
@@ -36,10 +38,10 @@ class Contact
     /**
      * @description Update AVADA Email Marketing contact data
      *
-     * @param $data
-     * @return mixed
+     * @param ContactInputData|array $data
+     * @return ApiResponse
      */
-    public function update($data)
+    public function update(array $data): ApiResponse
     {
         return $this->avadaio->makeRequest("/customers", 'PUT', ['data' => $data]);
     }
@@ -47,10 +49,10 @@ class Contact
     /**
      * @description Create AVADA Email Marketing new contacts in bulk
      *
-     * @param $data
-     * @return mixed
+     * @param ContactInputData[] $data
+     * @return ApiResponse
      */
-    public function bulk($data)
+    public function bulk(array $data): ApiResponse
     {
         return $this->avadaio->makeRequest("/customers/bulk", 'POST', ['data' => $data]);
     }

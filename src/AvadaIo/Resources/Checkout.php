@@ -3,6 +3,8 @@
 namespace AvadaIo\Resources;
 
 use AvadaIo\AvadaIoSdk;
+use AvadaIo\Data\ApiResponse;
+use AvadaIo\Data\CheckoutInputData;
 
 class Checkout
 {
@@ -25,10 +27,10 @@ class Checkout
     /**
      * @description Create AVADA Email Marketing new checkout
      *
-     * @param data
-     * @return mixed
+     * @param CheckoutInputData|array data
+     * @return ApiResponse
      */
-    public function create($data)
+    public function create(array $data): ApiResponse
     {
         return $this->avadaio->makeRequest("/checkouts", 'POST', ["data" => $data]);
     }
@@ -36,10 +38,10 @@ class Checkout
     /**
      * @description Update AVADA Email Marketing existed checkout
      *
-     * @param $data
-     * @return mixed
+     * @param CheckoutInputData|array $data
+     * @return ApiResponse
      */
-    public function update($data)
+    public function update(array $data): ApiResponse
     {
         return $this->avadaio->makeRequest("/checkouts", 'PUT', ["data" => $data]);
     }
@@ -47,10 +49,10 @@ class Checkout
     /**
      * @description Delete AVADA Email Marketing existed checkout
      *
-     * @param $id
-     * @return mixed
+     * @param string $id
+     * @return ApiResponse
      */
-    public function remove($id)
+    public function remove(string $id): ApiResponse
     {
         return $this->avadaio->makeRequest("/checkouts?id={$id}", 'DELETE', ["data" => []]);
     }

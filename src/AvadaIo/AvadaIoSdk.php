@@ -2,15 +2,26 @@
 
 namespace AvadaIo;
 
+use AvadaIo\Data\ApiResponse;
 use AvadaIo\Exception\SdkException;
 use AvadaIo\Http\HttpRequestJson;
 use AvadaIo\Resources\Checkout;
 use AvadaIo\Resources\Connection;
+use AvadaIo\Resources\Contact;
+use AvadaIo\Resources\Form;
+use AvadaIo\Resources\Order;
+use AvadaIo\Resources\Review;
+use AvadaIo\Resources\Subscriber;
 
 
 /**
  * @property-read Connection $Connection
  * @property-read Checkout $Checkout
+ * @property-read Form $Form
+ * @property-read Contact $Contact
+ * @property-read Subscriber $Subscriber
+ * @property-read Review $Review
+ * @property-read Order $Order
  *
  */
 class AvadaIoSdk
@@ -46,13 +57,12 @@ class AvadaIoSdk
         'Order'
     );
 
-    /*
-    * AvadaIoSdk constructor
-    *
-    * @param array $config
-    *
-    * @return void
-    */
+
+    /**
+     * @constructor
+     *
+     * @throws SdkException
+     */
     public function __construct($config = array())
     {
         if (!$config['appId'] || !$config['appKey']) {
@@ -66,14 +76,15 @@ class AvadaIoSdk
     }
 
     /**
-     * @param $endpoint
+     * @param string $endpoint
      * @param string $method
      * @param array $body
      * @param bool $isTest
      * @param bool $isTrigger
-     * @return mixed
+     *
+     * @return ApiResponse
      */
-    public function makeRequest($endpoint, string $method = 'POST', array $body = [], bool $isTest = false, bool $isTrigger = false)
+    public function makeRequest(string $endpoint, string $method = 'POST', array $body = [], bool $isTest = false, bool $isTrigger = false): ApiResponse
     {
         $curl_options = [
             CURLOPT_CUSTOMREQUEST => $method,
@@ -99,10 +110,14 @@ class AvadaIoSdk
             $curl_options[CURLOPT_POSTFIELDS] = $body;
         }
         if ($method === 'DELETE') {
-            return HttpRequestJson::delete($this->getApiUrl($endpoint), $body, $headers);
+            return new ApiResponse(
+                HttpRequestJson::delete($this->getApiUrl($endpoint), $body, $headers)
+            );
         }
 
-        return HttpRequestJson::$method($this->getApiUrl($endpoint), $body, $headers);
+        return new ApiResponse(
+            HttpRequestJson::$method($this->getApiUrl($endpoint), $body, $headers)
+        );
     }
 
     /**

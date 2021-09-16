@@ -3,6 +3,8 @@
 namespace AvadaIo\Resources;
 
 use AvadaIo\AvadaIoSdk;
+use AvadaIo\Data\ApiResponse;
+use AvadaIo\Data\ContactInputData;
 
 class Subscriber
 {
@@ -25,10 +27,10 @@ class Subscriber
     /**
      * @description Create new subscriber in AVADA Email Marketing, trigger the automation event
      *
-     * @param $data
-     * @return mixed
+     * @param ContactInputData|array $data
+     * @return ApiResponse
      */
-    public function add($data)
+    public function add(array $data): ApiResponse
     {
         return $this->avadaio->makeRequest("/subscribers", 'POST', ['data' => $data]);
     }

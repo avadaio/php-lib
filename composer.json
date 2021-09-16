@@ -1,8 +1,8 @@
 {
-    "name": "elliotjreed/php-package-boilperplate",
+    "name": "avadaio/avadaio-php-client",
     "license": "MIT",
-    "type": "project",
-    "description": "Example PHP package.",
+    "type": "library",
+    "description": "AVADA Email Marketing API bindings for PHP",
     "autoload": {
         "psr-4" : {
             "AvadaIo\\" : "src/AvadaIo/"
@@ -10,7 +10,7 @@
     },
     "autoload-dev": {
         "psr-4" : {
-            "Tests\\Example\\" : "tests/Example/"
+            "UnitTest\\AvadaIo\\" : "tests/AvadaIo/"
         }
     },
     "require": {

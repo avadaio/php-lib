@@ -3,6 +3,7 @@
 namespace AvadaIo\Resources;
 
 use AvadaIo\AvadaIoSdk;
+use AvadaIo\Data\ApiResponse;
 
 class Connection
 {
@@ -25,9 +26,9 @@ class Connection
     /**
      * Test the connection to AVADA Email Marketing app
      *
-     * @return mixed
+     * @return ApiResponse
      */
-    public function test()
+    public function test(): ApiResponse
     {
         return $this->avadaio->makeRequest("/connects", 'POST', [], true);
     }

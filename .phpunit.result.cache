@@ -1,0 +1,1 @@
+C:37:"PHPUnit\Runner\DefaultTestResultCache":286:{a:2:{s:7:"defects";a:2:{s:44:"Tests\Example\GreetingTest::testItGreetsUser";i:4;s:49:"UnitTest\AvadaIo\TestConnection::testItGreetsUser";i:4;}s:5:"times";a:2:{s:44:"Tests\Example\GreetingTest::testItGreetsUser";d:0.002;s:49:"UnitTest\AvadaIo\TestConnection::testItGreetsUser";d:0.639;}}}

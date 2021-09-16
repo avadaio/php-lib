@@ -3,6 +3,7 @@
 namespace AvadaIo\Resources;
 
 use AvadaIo\AvadaIoSdk;
+use AvadaIo\Data\ApiResponse;
 
 class Form
 {
@@ -25,9 +26,9 @@ class Form
     /**
      * @description List all inline form for page builder integration with AVADA forms
      *
-     * @return mixed
+     * @return ApiResponse
      */
-    public function list()
+    public function list(): ApiResponse
     {
         return $this->avadaio->makeRequest("/forms", 'GET');
     }

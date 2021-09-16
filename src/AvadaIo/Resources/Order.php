@@ -3,6 +3,12 @@
 namespace AvadaIo\Resources;
 
 use AvadaIo\AvadaIoSdk;
+use AvadaIo\Data\ApiResponse;
+use AvadaIo\Data\InvoiceInputData;
+use AvadaIo\Data\OrderCreateInputData;
+use AvadaIo\Data\OrderUpdateInputData;
+use AvadaIo\Data\RefundInputData;
+use AvadaIo\Data\ShipInputData;
 
 class Order
 {
@@ -25,10 +31,10 @@ class Order
     /**
      * @description Create AVADA Email Marketing new order
      *
-     * @param $data
-     * @return mixed
+     * @param OrderCreateInputData|array $data
+     * @return ApiResponse
      */
-    public function create($data)
+    public function create(array $data): ApiResponse
     {
         return $this->avadaio->makeRequest("/orders", 'POST', ['data' => $data]);
     }
@@ -36,10 +42,10 @@ class Order
     /**
      * @description Update AVADA Email Marketing existed order
      *
-     * @param $data
-     * @return mixed
+     * @param OrderUpdateInputData|array $data
+     * @return ApiResponse
      */
-    public function update($data)
+    public function update(array $data): ApiResponse
     {
         return $this->avadaio->makeRequest("/orders", 'PUT', ['data' => $data]);
     }
@@ -47,10 +53,10 @@ class Order
     /**
      * @description Complete AVADA Email Marketing new order
      *
-     * @param $data
-     * @return mixed
+     * @param OrderCreateInputData|array $data
+     * @return ApiResponse
      */
-    public function complete($data)
+    public function complete(array $data): ApiResponse
     {
         return $this->avadaio->makeRequest("/orders/complete", 'POST', ['data' => $data]);
     }
@@ -58,10 +64,10 @@ class Order
     /**
      * @description Create AVADA Email Marketing new orders in bulk
      *
-     * @param $data
-     * @return mixed
+     * @param OrderCreateInputData[] $data
+     * @return ApiResponse
      */
-    public function bulk($data)
+    public function bulk(array $data): ApiResponse
     {
         return $this->avadaio->makeRequest("/orders/bulk", 'POST', ['data' => $data]);
     }
@@ -69,10 +75,10 @@ class Order
     /**
      * @description Trigger AVADA Email Marketing new refund event
      *
-     * @param $data
-     * @return mixed
+     * @param RefundInputData|array $data
+     * @return ApiResponse
      */
-    public function refund($data)
+    public function refund(array $data): ApiResponse
     {
         return $this->avadaio->makeRequest("/orders/refund", 'POST', ['data' => $data]);
     }
@@ -80,10 +86,10 @@ class Order
     /**
      * @description Trigger AVADA Email Marketing new refund event
      *
-     * @param $data
-     * @return mixed
+     * @param InvoiceInputData|array $data
+     * @return ApiResponse
      */
-    public function invoice($data)
+    public function invoice(array $data): ApiResponse
     {
         return $this->avadaio->makeRequest("/orders/invoice", 'POST', ['data' => $data]);
     }
@@ -91,10 +97,10 @@ class Order
     /**
      * @description Trigger AVADA Email Marketing new shipment event
      *
-     * @param $data
-     * @return mixed
+     * @param ShipInputData|array $data
+     * @return ApiResponse
      */
-    public function ship($data)
+    public function ship(array $data): ApiResponse
     {
         return $this->avadaio->makeRequest("/orders/ship", 'POST', ['data' => $data]);
     }
