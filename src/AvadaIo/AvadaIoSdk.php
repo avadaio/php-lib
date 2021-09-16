@@ -4,12 +4,13 @@ namespace AvadaIo;
 
 use AvadaIo\Exception\SdkException;
 use AvadaIo\Http\HttpRequestJson;
+use AvadaIo\Resources\Checkout;
 use AvadaIo\Resources\Connection;
-use Exception;
 
 
 /**
  * @property-read Connection $Connection
+ * @property-read Checkout $Checkout
  *
  */
 class AvadaIoSdk
@@ -97,6 +98,9 @@ class AvadaIoSdk
         if (!isset($body)) {
             $curl_options[CURLOPT_POSTFIELDS] = $body;
         }
+        if ($method === 'DELETE') {
+            return HttpRequestJson::delete($this->getApiUrl($endpoint), $body, $headers);
+        }
 
         return HttpRequestJson::$method($this->getApiUrl($endpoint), $body, $headers);
     }
@@ -130,7 +134,7 @@ class AvadaIoSdk
     public function getHmac($body, bool $noHash = false)
     {
         if (!$noHash) {
-            return base64_encode(hash_hmac('sha256', json_encode($body, JSON_FORCE_OBJECT), $this->getAppKey(), true));
+            return base64_encode(hash_hmac('sha256', Helper::jsonEncode($body), $this->getAppKey(), true));
         }
 
         return $this->getAppKey();

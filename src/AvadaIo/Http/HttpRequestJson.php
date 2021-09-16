@@ -2,6 +2,8 @@
 
 namespace AvadaIo\Http;
 
+use AvadaIo\Helper;
+
 /**
  * Class HttpRequestJson
  *
@@ -53,17 +55,12 @@ class HttpRequestJson
      *
      * @return void
      */
-    protected static function prepareRequest($httpHeaders = array(), $dataArray = array())
+    protected static function prepareRequest(array $httpHeaders = array(), array $dataArray = array())
     {
-
-        self::$postDataJSON = json_encode($dataArray, JSON_FORCE_OBJECT);
-
-        self::$httpHeaders = $httpHeaders;
-
         if (!empty($dataArray)) {
-            self::$httpHeaders['Content-type'] = 'application/json';
-            self::$httpHeaders['Content-Length'] = strlen(self::$postDataJSON);
+            self::$postDataJSON = Helper::jsonEncode($dataArray);
         }
+        self::$httpHeaders = $httpHeaders;
     }
 
     /**
@@ -90,7 +87,6 @@ class HttpRequestJson
     public static function post($url, $dataArray, $httpHeaders = array())
     {
         self::prepareRequest($httpHeaders, $dataArray);
-
         $response = CurlRequest::post($url, self::$postDataJSON, self::$httpHeaders);
 
         return self::processResponse($response);
@@ -118,15 +114,16 @@ class HttpRequestJson
      * Implement a DELETE request and return json decoded output
      *
      * @param string $url
+     * @param array $dataArray
      * @param array $httpHeaders
      *
      * @return array
      */
-    public static function delete($url, $httpHeaders = array())
+    public static function delete($url, $dataArray, $httpHeaders = array())
     {
-        self::prepareRequest($httpHeaders);
+        self::prepareRequest($httpHeaders, $dataArray);
 
-        $response = CurlRequest::delete($url, self::$httpHeaders);
+        $response = CurlRequest::delete($url, self::$postDataJSON, self::$httpHeaders);
 
         return self::processResponse($response);
     }

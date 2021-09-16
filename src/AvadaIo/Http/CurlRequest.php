@@ -71,8 +71,8 @@ class CurlRequest
 
         //Return the transfer as a string
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'AvadaIo/AvadaSdk');
 
         foreach (self::$config as $option => $value) {
             curl_setopt($ch, $option, $value);
@@ -100,11 +100,7 @@ class CurlRequest
      */
     protected static function processRequest($ch)
     {
-
-        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
         $output = curl_exec($ch);
-        $info = curl_getinfo($ch);
-        $headerSent = curl_getinfo($ch, CURLINFO_HEADER_OUT);
         $response = new CurlResponse($output);
 
         self::$lastHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -162,15 +158,17 @@ class CurlRequest
      * Implement a DELETE request and return output
      *
      * @param string $url
+     * @param array $data
      * @param array $httpHeaders
      *
      * @return string
      */
-    public static function delete($url, $httpHeaders = array())
+    public static function delete($url, $data, $httpHeaders = array())
     {
         $ch = self::init($url, $httpHeaders);
         //set the request type
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
         return self::processRequest($ch);
     }
