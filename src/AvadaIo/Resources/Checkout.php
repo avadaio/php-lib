@@ -49,10 +49,10 @@ class Checkout
     /**
      * @description Delete AVADA Email Marketing existed checkout
      *
-     * @param string $id
+     * @param numeric $id
      * @return ApiResponse
      */
-    public function remove(string $id): ApiResponse
+    public function remove(int $id): ApiResponse
     {
         return $this->avadaio->makeRequest("/checkouts?id={$id}", 'DELETE', ["data" => []]);
     }

@@ -64,7 +64,7 @@ class Order
     /**
      * @description Create AVADA Email Marketing new orders in bulk
      *
-     * @param OrderCreateInputData[] $data
+     * @param OrderCreateInputData[]|array $data
      * @return ApiResponse
      */
     public function bulk(array $data): ApiResponse

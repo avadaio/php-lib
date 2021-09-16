@@ -49,7 +49,7 @@ class Contact
     /**
      * @description Create AVADA Email Marketing new contacts in bulk
      *
-     * @param ContactInputData[] $data
+     * @param ContactInputData[]|array $data
      * @return ApiResponse
      */
     public function bulk(array $data): ApiResponse
