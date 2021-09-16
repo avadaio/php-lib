@@ -4,6 +4,11 @@ namespace AvadaIo;
 
 use AvadaIo\Http\HttpRequestJson;
 
+
+/**
+ * @property-read Connection $Connection
+ *
+ */
 class AvadaIoSdk
 {
     /**
@@ -15,6 +20,19 @@ class AvadaIoSdk
      * @var string
      */
     protected $appKey = null;
+
+    /**
+     * @var string[]
+     */
+    protected $resources = array(
+        'Connection',
+        'Form',
+        'Contact',
+        'Subscriber',
+        'Review',
+        'Checkout',
+        'Order'
+    );
 
     /*
     * AvadaIoSdk constructor
@@ -92,13 +110,13 @@ class AvadaIoSdk
             'X-EmailMarketing-Hmac-Sha256' => $this->getHmac($body, $method === 'GET')
         ];
         if ($method !== 'GET') {
-            $headers['Content-type'] = 'application/json';
+            $headers['Content-Type'] = 'application/json';
         }
         if ($isTest) {
-            $headers['X-EmailMarketing-Connection-Test'] = true;
+            $headers['X-EmailMarketing-Connection-Test'] = 'true';
         }
         if ($isTrigger) {
-            $headers['X-Avadatrigger-App-Id'] = true;
+            $headers['X-AvadaTrigger-App-Id'] = 'true';
         }
         $curl_options[CURLOPT_HTTPHEADER] = $headers;
 
@@ -107,6 +125,48 @@ class AvadaIoSdk
         }
 
         return HttpRequestJson::$method($this->getApiUrl($endpoint), $body, $headers);
+    }
+
+    /**
+     * Return ShopifyResource instance for a resource.
+     * @example $shopify->Product->get(); //Returns all available Products
+     * Called like an object properties (without parenthesis)
+     *
+     * @param string $resourceName
+     *
+     * @return AvadaIoSdk
+     */
+    public function __get($resourceName)
+    {
+        return $this->$resourceName();
+    }
+
+    /**
+     * Return ShopifyResource instance for a resource.
+     * Called like an object method (with parenthesis) optionally with the resource ID as the first argument
+     * @example avadaio->Connection->test(); //Return a specific product defined by $productID
+     *
+     * @param string $resourceName
+     * @param array $arguments
+     *
+     * @throws Exception if the $name is not a valid ShopifyResource resource.
+     *
+     * @return AvadaIoSdk
+     */
+    public function __call($resourceName, $arguments)
+    {
+        if (!in_array($resourceName, $this->resources)) {
+            $message = "Invalid resource name $resourceName. Pls check the API Reference to get the appropriate resource name.";
+            throw new \Exception($message);
+        }
+
+        $resourceClassName = __NAMESPACE__ . "\\$resourceName";
+
+        //If first argument is provided, it will be considered as the ID of the resource.
+        $resourceID = !empty($arguments) ? $arguments[0] : null;
+
+        //Initiate the resource object
+        return new $resourceClassName($this);
     }
 }
 

@@ -4,7 +4,7 @@ namespace AvadaIo\Http;
 
 
 use AvadaIo\Exception\CurlException;
-use AvadaIo\CurlResponse;
+use AvadaIo\Http\CurlResponse;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,14 +68,7 @@ class CurlRequest
             $headers[] = "$key: $value";
         }
         //Set HTTP Headers
-        var_dump($headers);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            "X-EmailMarketing-App-Id:tTg4lFZkpV6vH74n6UB6",
-            "X-EmailMarketing-Hmac-Sha256:EpzwcUB/2nzZr/JEXfsNwYtArZbG3K9Y3ONvjP0iXp4=",
-            "Content-type:application/json",
-            "Accept:application/json",
-            "X-EmailMarketing-Connection-Test:true"
-        ]);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
         return $ch;
 
@@ -168,7 +161,7 @@ class CurlRequest
      * @param resource $ch
      *
      * @return string
-     * @throws CurlException if curl request is failed with error
+     * @throws Exception if curl request is failed with error
      *
      */
     protected static function processRequest($ch)
@@ -182,7 +175,7 @@ class CurlRequest
 
         self::$lastHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         if (curl_errno($ch)) {
-            throw new Exception\CurlException(curl_errno($ch) . ' : ' . curl_error($ch));
+            throw new \Exception(curl_errno($ch) . ' : ' . curl_error($ch));
         }
 
         // close curl resource to free up system resources
@@ -192,5 +185,4 @@ class CurlRequest
 
         return $response->getBody();
     }
-
 }
