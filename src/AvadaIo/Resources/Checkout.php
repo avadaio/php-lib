@@ -23,6 +23,8 @@ class Checkout
     }
 
     /**
+     * @description Create AVADA Email Marketing new checkout
+     *
      * @param data
      * @return mixed
      */
@@ -32,6 +34,8 @@ class Checkout
     }
 
     /**
+     * @description Update AVADA Email Marketing existed checkout
+     *
      * @param $data
      * @return mixed
      */
@@ -41,6 +45,8 @@ class Checkout
     }
 
     /**
+     * @description Delete AVADA Email Marketing existed checkout
+     *
      * @param $id
      * @return mixed
      */
