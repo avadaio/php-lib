@@ -21,7 +21,7 @@ class AvadaSdkTest extends TestCase
     public function __construct(?string $name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-        $this->avadaio = new AvadaIoSdk(['appId' => "tTg4lFZkpV6vH74n6UB6", "appKey" => "d3af7f191829062d877871d4b28c3445"]);
+        $this->avadaio = new AvadaIoSdk(['appId' => "YOUR_APP_ID", "appKey" => "YOUR_APP_KEY"]);
     }
 
     public function testConnection(): void
