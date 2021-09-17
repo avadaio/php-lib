@@ -109,11 +109,6 @@ class AvadaIoSdk
         if (!isset($body)) {
             $curl_options[CURLOPT_POSTFIELDS] = $body;
         }
-        if ($method === 'DELETE') {
-            return new ApiResponse(
-                HttpRequestJson::delete($this->getApiUrl($endpoint), $body, $headers)
-            );
-        }
 
         return new ApiResponse(
             HttpRequestJson::$method($this->getApiUrl($endpoint), $body, $headers)
