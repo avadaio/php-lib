@@ -1,69 +1,147 @@
-# PHP Package Boilerplate / Example Project
+# AVADA Email Marketing API - PHP
 
-This repository shows a basic setup for a PHP package or application in PHP.
+AVADA Email Marketing API bindings for PHP to make it easier for developer to connect with AVADA Marketing Automation platform.
 
-## PHP Versions
+## Table of Contents
 
-This version will work on PHP version 7.4 and above.
+- [Installation](#installation)
+- [API](#api)
+- [Examples](#examples)
+- [Support](#support)
 
-For a version which is compatible with only PHP 8.0 and above select the 8.0 Git tag ([github.com/elliotjreed/php-package-boilerplate/tree/8.0](https://github.com/elliotjreed/php-package-boilerplate/tree/8.0)).
-
-## Getting Started
-
-PHP 7.4 or above and Composer is expected to be installed on our system.
-
-### Installing Composer
-
-For instructions on how to install Composer visit [getcomposer.org](https://getcomposer.org/download/).
-
-### Installing
-
-After cloning this repository, change into the newly created directory and run
+## Installation
 
 ```bash
-composer install
+composer require avadaio/avadaio-php-client
 ```
 
-or if you have installed Composer locally in your current directory
+## API
 
-```bash
-php composer.phar install
+Our API documentation is located at: [AVADA API Documentation](https://documenter.getpostman.com/view/10585474/TVmPAHH9#654363ae-7cd2-4236-a5e1-818ab87ecde0). You can see our API for more reference.
+
+### Init instance
+
+AvadaIoSdk uses curl extension for handling http calls. So you need to have the curl extension installed and enabled with PHP.
+
+```php
+$avadaio = new AvadaIo\AvadaIoSdk([
+    'appId' => "[YOUR_APP_ID]", 
+    "appKey" => "[YOUR_APP_KEY]"
+]);
 ```
 
-This will install all dependencies needed for the project.
+This module exports a constructor function which takes an associative array.
 
-## Running the Tests
+### `AvadaIoSdk(options)`
 
-All tests can be run by executing
+Creates a new `AVADA` instance.
 
-```bash
-vendor/bin/phpunit
+#### Arguments
+
+- `options` - Required - An associative array with two indexes
+
+#### Options
+
+- `appId` - Required
+- `appKey` - Required
+
+You can obtain your `appId` and `appKey` after creating an account with AVADA and go to the [Manage Keys page]('https://app.avada.io/manage/keys)
+
+#### Return value
+
+A `AvadaIoSdk` instance.
+
+#### Exceptions
+
+Throws an `Error` exception if the required options are missing.
+
+## Resources
+
+Every resource is accessed via your `$avadaio` instance:
+
+```php
+$avadaio = new AvadaIo\AvadaIoSdk([
+    'appId' => "[YOUR_APP_ID]",
+    "appKey" => "[YOUR_APP_KEY]"
+]);
+
+// $avadaio-><resource_name>-><method_name>
 ```
 
-`phpunit` will automatically find all tests inside the `test` directory and run them based on the configuration in the `phpunit.xml` file.
+Each method returns `ApiResponse` object with 3 properties:
 
-### Testing Approach
+- `success` - boolean
+- `data` - any - optional
+- `message` - string
 
-The test for the class `Greeting` verifies that the return value of the `sayHello` method returns the string "Hello {name}", where {name} is the value passed through to the constructor.
-
-## Running the Application
-
-PHP has an in-built server for local development. This can be started by executing
-
+```php
+$result = $this->avadaio->Contact->create([
+    "description" => "",
+    "email" => "john@doe.io",
+    "firstName" => "John",
+    "isSubscriber" => true,
+    "lastName" => "Doe",
+    "phoneNumber" => "+123465789",
+    "phoneNumberCountry" => "US",
+    "source" => "magento",
+    "orderCount" => 0,
+    "totalSpent" => 0,
+    "country" => "US",
+    "city" => "",
+    "address" => "",
+    "tags" => "Email Marketing"
+]);
 ```
-php -S localhost:8000 -t public
+
+The JSON return from the API is like this:
+
+```json
+{"success": true, "message": "Hook create/update customers complete"}
 ```
 
-Then open your browser at `http://localhost:8000/example.php`
+This behavior is the same for all resources.
 
-You should see the text "Hello Ada Lovelace" on your screen.
+## Examples
 
-## Built With
+### Test connection
 
-  - [PHP](https://secure.php.net/)
-  - [Composer](https://getcomposer.org/)
-  - [PHPUnit](https://phpunit.de/)
+```php
+ $result = $this->avadaio->Connection->test();
+if ($result->success) {
+  echo 'Connection established';
+}
+```
 
-## License
+More examples can be found in the `tests` folder in the project source code.
 
-This project is licensed under the MIT License - see the [LICENCE.md](LICENCE.md) file for details.
+## Available resources and methods
+
+- Connection
+    - `test()` Test the connection using your `appKey` and `appId`
+- Form
+    - `list()` Get a list of inline forms to integrate AVADA Forms into your page builder
+- Contact
+    - `create(data)` Create a new contact in your AVADA admin
+    - `update(data)` Update an existing contact in your AVADA admin
+    - `bulk(data)` Create new contacts in your AVADA admin in bulk
+- Subscriber
+    - `add(data)` Add a new contact to your contact list as a subscriber. Trigger the New Subscriber automation event.
+- Review
+    - `submit(data)` Trigger the submit of a new review on your store. Trigger On new review automation event.
+- Checkout
+    - `create(data)` Trigger a new checkout event to AVADA, which will be used for the Abandoned Cart Automation.
+    - `update(data)` Trigger an update to a checkout event to AVADA. For example, update checkout email so that the cart will be qualified for Abandoned Cart Email.
+    - `remove(id)` Remove a checkout.
+- Order
+    - `create(data)` Trigger a new order event to AVADA. Trigger New Order automation event.
+    - `update(data)` Update an existing order.
+    - `complete(data)` Complete an order. Trigger Cross-sell, Up-sell automation events.
+    - `bulk(data)` Sync your orders to AVADA using bulk order inserts.
+    - `refund(data)` Trigger a refund event to AVADA
+    - `invoice(data)` Trigger a fulfillment event to AVADA
+    - `ship(data)` Trigger a shipping event to AVADA
+    
+
+## Support
+
+If you need any support, you can reach to us within our customer chat support inside your [app]('https://app.avada.io'')
