@@ -49,11 +49,11 @@ You can obtain your `appId` and `appKey` after creating an account with AVADA an
 
 #### Return value
 
-A `AvadaIoSdk` instance.
+An `AvadaIoSdk` instance.
 
 #### Exceptions
 
-Throws an `Error` exception if the required options are missing.
+Throws an `SdkException` exception if the required options are missing.
 
 ## Resources
 
@@ -75,7 +75,7 @@ Each method returns `ApiResponse` object with 3 properties:
 - `message` - string
 
 ```php
-$result = $this->avadaio->Contact->create([
+$result = $avadaio->Contact->create([
     "description" => "",
     "email" => "john@doe.io",
     "firstName" => "John",
@@ -106,7 +106,7 @@ This behavior is the same for all resources.
 ### Test connection
 
 ```php
- $result = $this->avadaio->Connection->test();
+ $result = $avadaio->Connection->test();
 if ($result->success) {
   echo 'Connection established';
 }
