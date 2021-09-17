@@ -1,24 +1,41 @@
 {
-    "name": "avadaio/avadaio-php-client",
-    "license": "MIT",
-    "type": "library",
-    "description": "AVADA Email Marketing API bindings for PHP",
-    "autoload": {
-        "psr-4" : {
-            "AvadaIo\\" : "src/AvadaIo/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4" : {
-            "UnitTest\\AvadaIo\\" : "tests/AvadaIo/"
-        }
-    },
-    "require": {
-        "php": "^7.1|^8.0",
-        "ext-curl": "*",
-        "ext-json": "*"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^9.5"
+  "name": "avadaio/avadaio-php-client",
+  "license": "MIT",
+  "type": "library",
+  "description": "AVADA Email Marketing API bindings for PHP",
+  "version": "1.0.0",
+  "authors": [
+    {
+      "email": "thomas@avada.io",
+      "name": "Thomas Nguyen"
     }
+  ],
+  "keywords": [
+    "avadaio",
+    "php",
+    "email-marketing",
+    "marketing-automation"
+  ],
+  "homepage": "https://avada.io",
+  "support": {
+    "email": "support@avada.io"
+  },
+  "autoload": {
+    "psr-4": {
+      "AvadaIo\\": "src/AvadaIo/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "UnitTest\\AvadaIo\\": "tests/AvadaIo/"
+    }
+  },
+  "require": {
+    "php": "^7.1|^8.0",
+    "ext-curl": "*",
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
+  }
 }
