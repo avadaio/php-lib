@@ -1,6 +1,7 @@
 # AVADA Email Marketing API - PHP
 
-AVADA Email Marketing API bindings for PHP to make it easier for developer to connect with AVADA Marketing Automation platform.
+
+[AVADA Email Marketing]('https://app.avada.io') API bindings for PHP to make it easier for developer to connect with AVADA Marketing Automation platform.
 
 ## Table of Contents
 
@@ -144,4 +145,4 @@ More examples can be found in the `tests` folder in the project source code.
 
 ## Support
 
-If you need any support, you can reach to us within our customer chat support inside your [app]('https://app.avada.io'')
+If you need any support, you can reach to us within our customer chat support inside your [app]('https://app.avada.io')
